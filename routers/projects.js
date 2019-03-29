@@ -9,8 +9,21 @@ const prettifyArray = objArr => {
   }));
 };
 
-const prettifyObject = obj => {
-  return { ...obj, completed: obj.completed === 1 ? true : false };
+const prettifyProjectWithActions = arr => {
+  return {
+    id: arr[0].id,
+    name: arr[0].project_name,
+    description: arr[0].project_description,
+    completed: arr[0].project_completed === 1 ? true : false,
+    actions: !arr[0].action_id
+      ? []
+      : arr.map(el => ({
+          id: el.action_id,
+          description: el.action_description,
+          notes: el.notes,
+          completed: el.action_completed === 1 ? true : false
+        }))
+  };
 };
 
 router
@@ -35,8 +48,10 @@ router
         .json({ error: "Your new project must have a name and description" });
     try {
       const newProjectId = await db.addProject(req.body);
-      const newProject = await db.findProjectById(newProjectId[0]).first();
-      const prettierProject = prettifyObject(newProject);
+      console.log(newProjectId);
+      const newProject = await db.findProjectById(newProjectId[0]);
+      console.log(newProject);
+      const prettierProject = prettifyProjectWithActions(newProject);
       res.status(201).json(prettierProject);
     } catch (error) {
       res
@@ -44,5 +59,18 @@ router
         .json({ error: "Sorry we couldn't add a project at this time" });
     }
   });
+
+router.route("/:id").get(async (req, res) => {
+  try {
+    const rawProject = await db.findProjectById(req.params.id);
+    // this is a disaster
+    const project = prettifyProjectWithActions(rawProject);
+    res.status(200).json(project);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Sorry we couldn't get that project right now" });
+  }
+});
 
 module.exports = router;
