@@ -1,6 +1,7 @@
 const express = require("express");
 const helmet = require("helmet");
 const projects = require("./routers/projects");
+const actions = require("./routers/actions");
 
 const app = express();
 
@@ -9,6 +10,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => res.send("<h1>Sprint Challenge: RDBMS</h1>"));
 app.use("/api/projects", projects);
+app.use("/api/actions", actions);
 
 const port = process.env.PORT || 6500;
 app.listen(port, console.log(`Server running on ${port}`));

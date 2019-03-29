@@ -1,30 +1,10 @@
 const express = require("express");
 const db = require("../data/dbHelpers");
 const router = express.Router();
+const helpers = require("./helpers");
 
-const prettifyArray = objArr => {
-  return objArr.map(el => ({
-    ...el,
-    completed: el.completed === 1 ? true : false
-  }));
-};
-
-const prettifyProjectWithActions = arr => {
-  return {
-    id: arr[0].id,
-    name: arr[0].project_name,
-    description: arr[0].project_description,
-    completed: arr[0].project_completed === 1 ? true : false,
-    actions: !arr[0].action_id
-      ? []
-      : arr.map(el => ({
-          id: el.action_id,
-          description: el.action_description,
-          notes: el.notes,
-          completed: el.action_completed === 1 ? true : false
-        }))
-  };
-};
+const prettifyArray = helpers.prettifyArray;
+const prettifyProjectWithActions = helpers.prettifyProjectWithActions;
 
 router
   .route("/")
@@ -63,7 +43,6 @@ router
 router.route("/:id").get(async (req, res) => {
   try {
     const rawProject = await db.findProjectById(req.params.id);
-    // this is a disaster
     const project = prettifyProjectWithActions(rawProject);
     res.status(200).json(project);
   } catch (error) {

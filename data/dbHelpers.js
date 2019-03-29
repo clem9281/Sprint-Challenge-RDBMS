@@ -1,16 +1,18 @@
 const db = require("./dbConfig");
 
+//projects
 const findProjects = () => {
   return db("projects");
 };
 
-// const findProjectById = id => {
-//   return db("projects").where({ id });
-// };
+const findProjectByIdSimple = id => {
+  return db("projects").where({ id });
+};
 
 const findProjectById = id => {
   return (
     db("projects")
+      // use a left join so we still get something back from new projects that don't have actions yet
       .leftJoin("actions", "actions.project_id", "projects.id")
       // maybe should have given these better names to begin with
       .select({
@@ -31,8 +33,19 @@ const addProject = newProject => {
   return db("projects").insert(newProject);
 };
 
+// actions
+const getActions = () => {
+  return db("actions");
+};
+const addAction = newAction => {
+  return db("actions").insert(newAction);
+};
+
 module.exports = {
   findProjects,
   addProject,
-  findProjectById
+  findProjectById,
+  getActions,
+  addAction,
+  findProjectByIdSimple
 };
