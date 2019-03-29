@@ -33,6 +33,12 @@ const addProject = newProject => {
   return db("projects").insert(newProject);
 };
 
+const deleteProject = id => {
+  return db("projects")
+    .where({ id })
+    .del();
+};
+
 // actions
 const getActions = () => {
   return db("actions");
@@ -47,5 +53,6 @@ module.exports = {
   findProjectById,
   getActions,
   addAction,
-  findProjectByIdSimple
+  findProjectByIdSimple,
+  deleteProject
 };
