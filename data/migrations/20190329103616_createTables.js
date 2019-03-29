@@ -15,10 +15,7 @@ exports.up = function(knex, Promise) {
     .createTable("actions", tbl => {
       tbl.increments();
 
-      tbl
-        .string("description", 256)
-        .unique()
-        .notNullable();
+      tbl.string("description", 256).notNullable();
 
       tbl.string("notes", 256).notNullable();
 

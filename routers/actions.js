@@ -11,7 +11,8 @@ router
   .get(async (req, res) => {
     try {
       const actions = await db.getActions();
-      res.status(200).json(actions);
+      const prettierActions = prettifyArray(actions);
+      res.status(200).json(prettierActions);
     } catch (error) {
       res
         .status(500)
