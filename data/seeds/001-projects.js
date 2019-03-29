@@ -3,13 +3,11 @@ exports.seed = function(knex, Promise) {
   return knex("projects").insert([
     {
       name: "Sprint Challenge",
-      description: "Sprint 12 Challenge: RDBMS",
-      completed: "false"
+      description: "Sprint 12 Challenge: RDBMS"
     },
     {
       name: "awwwlympics",
-      description: "Side project for pm group",
-      completed: "false"
+      description: "Side project for pm group"
     }
   ]);
 };
